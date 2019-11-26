@@ -622,10 +622,10 @@ runuser -l $SUDOUSER -c "git clone ${OANSIBLEURL} /home/$SUDOUSER/openshift-ansi
 # ADDED BY BRENT:
 
 # echo $(date) " - Running prerequisites.yml playbook"
-runuser -l $SUDOUSER -c "ansible-playbook playbooks/prerequisites.yml"
+runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/prerequisites.yml"
 
 # echo $(date) " - Running prerequisites.yml playbook"
-runuser -l $SUDOUSER -c "ansible-playbook playbooks/deploy_cluster.yml"
+runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/deploy_cluster.yml"
 #============================================================
 
 
