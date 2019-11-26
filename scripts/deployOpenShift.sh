@@ -618,20 +618,35 @@ echo $(date) " - Installing OpenShift Container Platform via Ansible Playbook"
 
 runuser -l $SUDOUSER -c "git clone ${OANSIBLEURL} /home/$SUDOUSER/openshift-ansible && cd /home/$SUDOUSER/openshift-ansible && git checkout ${OANSIBLEBRANCH}"
 
-echo $(date) " - Running network_manager.yml playbook"
-DOMAIN=`domainname -d`
-# Setup NetworkManager to manage eth0
-runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/byo/openshift-node/network_manager.yml"
+#============================================================
+# ADDED BY BRENT:
 
-echo $(date) " - Setting up NetworkManager on eth0"
-# Configure resolv.conf on all hosts through NetworkManager
-runuser -l $SUDOUSER -c "ansible all -b -m service -a \"name=NetworkManager state=restarted\""
-sleep 5
-runuser -l $SUDOUSER -c "ansible all -b -m command -a \"nmcli con modify eth0 ipv4.dns-search $DOMAIN\""
-runuser -l $SUDOUSER -c "ansible all -b -m service -a \"name=NetworkManager state=restarted\""
+# echo $(date) " - Running prerequisites.yml playbook"
+runuser -l $SUDOUSER -c "ansible-playbook playbooks/prerequisites.yml"
 
-echo $(date) " - Running config.yml playbook"
-runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/byo/config.yml"
+# echo $(date) " - Running prerequisites.yml playbook"
+runuser -l $SUDOUSER -c "ansible-playbook playbooks/deploy_cluster.yml"
+#============================================================
+
+
+#============================================================
+# REMOVED BY BRENT:
+
+# echo $(date) " - Running network_manager.yml playbook"
+# DOMAIN=`domainname -d`
+# # Setup NetworkManager to manage eth0
+# runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/byo/openshift-node/network_manager.yml"
+
+# echo $(date) " - Setting up NetworkManager on eth0"
+# # Configure resolv.conf on all hosts through NetworkManager
+# runuser -l $SUDOUSER -c "ansible all -b -m service -a \"name=NetworkManager state=restarted\""
+# sleep 5
+# runuser -l $SUDOUSER -c "ansible all -b -m command -a \"nmcli con modify eth0 ipv4.dns-search $DOMAIN\""
+# runuser -l $SUDOUSER -c "ansible all -b -m service -a \"name=NetworkManager state=restarted\""
+
+# echo $(date) " - Running config.yml playbook"
+# runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/byo/config.yml"
+#============================================================
 
 echo $(date) " - Modifying sudoers"
 
