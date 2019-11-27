@@ -486,19 +486,19 @@ $MASTER-0
 
 # host group for nodes
 [nodes]
-$MASTER-0 openshift_node_labels="{'type': 'master', 'zone': 'default'}" openshift_hostname=$MASTER-0
+$MASTER-0 openshift_node_group_name='node-config-master'
 EOF
 
 # Loop to add Infra Nodes
 for (( c=0; c<$INFRACOUNT; c++ ))
 do
-  echo "$INFRA-$c openshift_node_labels=\"{'type': 'infra', 'zone': 'default'}\" openshift_hostname=$INFRA-$c" >> /etc/ansible/hosts
+  echo "$INFRA-$c openshift_node_group_name='node-config-infra'" >> /etc/ansible/hosts
 done
 
 # Loop to add Nodes
 for (( c=0; c<$NODECOUNT; c++ ))
 do
-  echo "$NODE-$c openshift_node_labels=\"{'type': 'app', 'zone': 'default'}\" openshift_hostname=$NODE-$c" >> /etc/ansible/hosts
+  echo "$NODE-$c openshift_node_group_name='node-config-compute'" >> /etc/ansible/hosts
 done
 
 else
