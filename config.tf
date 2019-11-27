@@ -31,13 +31,13 @@ variable "openshift_azure_resource_prefix" {
 variable "openshift_azure_resource_suffix" {
   type        = string
   description = "Suffix for all the resources"
-  default     = "tf"
+  default     = "test"
 }
 
 variable "openshift_azure_resource_group" {
   type        = string
   description = "Azure resource group"
-  default     = "azure"
+  default     = "resgrp"
 }
 
 variable "openshift_azure_region" {
@@ -134,13 +134,13 @@ variable "openshift_azure_vm_username" {
 variable "openshift_master_dns_name" {
   type        = string
   description = "DNS prefix name for the master"
-  default     = "osmaster"
+  default     = "master"
 }
 
 variable "openshift_infra_dns_name" {
   type        = string
   description = "DNS prefix name for the infra"
-  default     = "osinfra"
+  default     = "infra"
 }
 
 variable "openshift_initial_password" {
