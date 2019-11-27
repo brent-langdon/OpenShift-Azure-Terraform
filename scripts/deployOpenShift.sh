@@ -471,7 +471,8 @@ openshift_master_cluster_public_hostname=$MASTERPUBLICIPHOSTNAME
 openshift_master_cluster_public_vip=$MASTERPUBLICIPADDRESS
 
 # Enable HTPasswdPasswordIdentityProvider for username / password authentication for OpenShift Cluster
-#openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+openshift_master_htpasswd_file=/etc/origin/master/htpasswd
 
 # host group for masters
 [masters]
@@ -548,7 +549,8 @@ openshift_master_cluster_public_hostname=$MASTERPUBLICIPHOSTNAME
 openshift_master_cluster_public_vip=$MASTERPUBLICIPADDRESS
 
 # Enable HTPasswdPasswordIdentityProvider
-#openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+openshift_master_htpasswd_file=/etc/origin/master/htpasswd
 
 # host group for masters
 [masters]
@@ -610,17 +612,17 @@ echo $(date) "- Re-enabling requiretty"
 sed -i -e "s/# Defaults    requiretty/Defaults    requiretty/" /etc/sudoers
 
 ##
-## TODO: Commented out all the calls to ansible-playbook.
+## TODO: Commented out some of the calls to ansible-playbook.
 ##    need to determine if any of this is needed.
 ##
 
 # Adding user to OpenShift authentication file
 echo $(date) "- Adding OpenShift user"
-#runuser -l $SUDOUSER -c "ansible-playbook ~/addocpuser.yml"
+runuser -l $SUDOUSER -c "ansible-playbook ~/addocpuser.yml"
 
 # Assigning cluster admin rights to OpenShift user
 echo $(date) "- Assigning cluster admin rights to user"
-#runuser -l $SUDOUSER -c "ansible-playbook ~/assignclusteradminrights.yml"
+runuser -l $SUDOUSER -c "ansible-playbook ~/assignclusteradminrights.yml"
 
 # Create Storage Class
 echo $(date) "- Creating Storage Class"
