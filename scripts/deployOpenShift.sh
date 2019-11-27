@@ -550,7 +550,6 @@ openshift_master_cluster_public_vip=$MASTERPUBLICIPADDRESS
 
 # Enable HTPasswdPasswordIdentityProvider
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
-openshift_master_htpasswd_file=/etc/origin/master/htpasswd
 
 # host group for masters
 [masters]
