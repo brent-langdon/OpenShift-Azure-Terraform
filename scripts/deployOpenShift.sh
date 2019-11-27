@@ -609,21 +609,26 @@ echo $(date) "- Re-enabling requiretty"
 
 sed -i -e "s/# Defaults    requiretty/Defaults    requiretty/" /etc/sudoers
 
+##
+## TODO: Commented out all the calls to ansible-playbook.
+##    need to determine if any of this is needed.
+##
+
 # Adding user to OpenShift authentication file
 echo $(date) "- Adding OpenShift user"
-runuser -l $SUDOUSER -c "ansible-playbook ~/addocpuser.yml"
+#runuser -l $SUDOUSER -c "ansible-playbook ~/addocpuser.yml"
 
 # Assigning cluster admin rights to OpenShift user
 echo $(date) "- Assigning cluster admin rights to user"
-runuser -l $SUDOUSER -c "ansible-playbook ~/assignclusteradminrights.yml"
+#runuser -l $SUDOUSER -c "ansible-playbook ~/assignclusteradminrights.yml"
 
 # Create Storage Class
 echo $(date) "- Creating Storage Class"
-runuser -l $SUDOUSER -c "ansible-playbook ~/configurestorageclass.yml"
+#runuser -l $SUDOUSER -c "ansible-playbook ~/configurestorageclass.yml"
 
 # Configure Docker Registry to use Azure Storage Account
 echo $(date) "- Configuring Docker Registry to use Azure Storage Account"
-runuser -l $SUDOUSER -c "ansible-playbook ~/dockerregistry.yml"
+#runuser -l $SUDOUSER -c "ansible-playbook ~/dockerregistry.yml"
 
 echo $(date) "- Sleep for 120"
 sleep 120
@@ -631,10 +636,10 @@ sleep 120
 # Execute setup-azure-master and setup-azure-node playbooks to configure Azure Cloud Provider
 echo $(date) "- Configuring OpenShift Cloud Provider to be Azure"
 
-runuser -l $SUDOUSER -c "ansible-playbook ~/setup-azure-master.yml"
-runuser -l $SUDOUSER -c "ansible-playbook ~/setup-azure-node-master.yml"
-runuser -l $SUDOUSER -c "ansible-playbook ~/setup-azure-node.yml"
-runuser -l $SUDOUSER -c "ansible-playbook ~/deletestucknodes.yml"
+#runuser -l $SUDOUSER -c "ansible-playbook ~/setup-azure-master.yml"
+#runuser -l $SUDOUSER -c "ansible-playbook ~/setup-azure-node-master.yml"
+#runuser -l $SUDOUSER -c "ansible-playbook ~/setup-azure-node.yml"
+#runuser -l $SUDOUSER -c "ansible-playbook ~/deletestucknodes.yml"
 
 # Delete postinstall files
 echo $(date) "- Deleting post installation files"
