@@ -40,7 +40,7 @@ runuser -l $SUDOUSER -c "chmod 600 ~/.ssh/id_rsa*"
 
 # echo $(date) "- Configuring SSH ControlPath to use shorter path name"
 # sed -i -e "s/^# control_path = %(directory)s\/%%h-%%r/control_path = %(directory)s\/%%h-%%r/" /etc/ansible/ansible.cfg
-# sed -i -e "s/^#host_key_checking = False/host_key_checking = False/" /etc/ansible/ansible.cfg
+sed -i -e "s/^#host_key_checking = False/host_key_checking = False/" /etc/ansible/ansible.cfg
 # sed -i -e "s/^#pty=False/pty=False/" /etc/ansible/ansible.cfg
 
 # Temporary workaround: https://access.redhat.com/solutions/3165971
@@ -441,17 +441,6 @@ nodes
 ansible_ssh_user=$SUDOUSER
 ansible_become=yes
 openshift_deployment_type=origin
-openshift_release=v3.11
-docker_udev_workaround=True
-openshift_use_dnsmasq=True
-openshift_master_default_subdomain=$ROUTING
-openshift_override_hostname_check=true
-osm_use_cockpit=false
-#os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
-#console_port=443
-osm_default_node_selector='type=app'
-openshift_disable_check=disk_availability,memory_availability
-os_firewall_use_firewalld=False
 
 # cloudprovider settings for azure
 openshift_cloudprovider_kind=azure
@@ -461,10 +450,6 @@ openshift_cloudprovider_azure_tenant_id=$TENANTID
 openshift_cloudprovider_azure_subscription_id=$SUBSCRIPTIONID
 openshift_cloudprovider_azure_resource_group=$RESOURCEGROUP
 openshift_cloudprovider_azure_location=$LOCATION
-
-# default selectors for router and registry services
-openshift_router_selector='type=infra'
-openshift_registry_selector='type=infra'
 
 openshift_master_cluster_hostname=$MASTERPUBLICIPHOSTNAME
 openshift_master_cluster_public_hostname=$MASTERPUBLICIPHOSTNAME
@@ -517,17 +502,6 @@ nodes
 ansible_ssh_user=$SUDOUSER
 ansible_become=yes
 openshift_deployment_type=origin
-openshift_release=v3.11
-docker_udev_workaround=True
-openshift_use_dnsmasq=True
-openshift_master_default_subdomain=$ROUTING
-openshift_override_hostname_check=true
-osm_use_cockpit=false
-#os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
-#console_port=443
-osm_default_node_selector='type=app'
-openshift_disable_check=disk_availability,memory_availability
-os_firewall_use_firewalld=False
 
 # cloudprovider settings for azure
 openshift_cloudprovider_kind=azure
@@ -537,10 +511,6 @@ openshift_cloudprovider_azure_tenant_id=$TENANTID
 openshift_cloudprovider_azure_subscription_id=$SUBSCRIPTIONID
 openshift_cloudprovider_azure_resource_group=$RESOURCEGROUP
 openshift_cloudprovider_azure_location=$LOCATION
-
-# default selectors for router and registry services
-openshift_router_selector='type=infra'
-openshift_registry_selector='type=infra'
 
 openshift_master_cluster_method=native
 openshift_master_cluster_hostname=$MASTERPUBLICIPHOSTNAME
@@ -591,9 +561,9 @@ runuser -l $SUDOUSER -c "git clone ${OANSIBLEURL} /home/$SUDOUSER/openshift-ansi
 
 # Run Ansible playbooks
 # echo $(date) " - Running prerequisites.yml playbook"
-# runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/prerequisites.yml"
+runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/prerequisites.yml"
 # echo $(date) " - Running deploy_cluster.yml playbook"
-# runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/deploy_cluster.yml"
+runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/deploy_cluster.yml"
 
 # echo $(date) " - Modifying sudoers"
 # sed -i -e "s/Defaults    requiretty/# Defaults    requiretty/" /etc/sudoers
@@ -614,12 +584,12 @@ runuser -l $SUDOUSER -c "git clone ${OANSIBLEURL} /home/$SUDOUSER/openshift-ansi
 ##
 
 # Adding user to OpenShift authentication file
-# echo $(date) "- Adding OpenShift user"
-# runuser -l $SUDOUSER -c "ansible-playbook ~/addocpuser.yml"
+echo $(date) "- Adding OpenShift user"
+runuser -l $SUDOUSER -c "ansible-playbook ~/addocpuser.yml"
 
 # Assigning cluster admin rights to OpenShift user
-# echo $(date) "- Assigning cluster admin rights to user"
-# runuser -l $SUDOUSER -c "ansible-playbook ~/assignclusteradminrights.yml"
+echo $(date) "- Assigning cluster admin rights to user"
+runuser -l $SUDOUSER -c "ansible-playbook ~/assignclusteradminrights.yml"
 
 # Create Storage Class
 # echo $(date) "- Creating Storage Class"
