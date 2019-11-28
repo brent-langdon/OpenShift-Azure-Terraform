@@ -6,19 +6,15 @@ SUDOUSER=$2
 
 # Update system to latest packages and install dependencies
 echo $(date) " - Update system to latest packages and install dependencies"
-
-yum -y install wget git net-tools bind-utils iptables-services bridge-utils bash-completion httpd-tools
+yum -y install git iptables-services httpd-tools
 yum -y update --exclude=WALinuxAgent
 
 # Install EPEL repository
 echo $(date) " - Installing EPEL"
-
 yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-
 sed -i -e "s/^enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
 
 # Only install Ansible and pyOpenSSL on Master-0 Node
-
 if hostname -f|grep -- "-0" >/dev/null
 then
    echo $(date) " - Installing Ansible and pyOpenSSL"

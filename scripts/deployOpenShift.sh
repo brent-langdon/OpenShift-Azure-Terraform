@@ -38,34 +38,11 @@ echo $(date) " - Generating Private keys for use by Ansible for OpenShift Instal
 runuser -l $SUDOUSER -c "(echo \"$PRIVATEKEY\" | base64 -d) > ~/.ssh/id_rsa"
 runuser -l $SUDOUSER -c "chmod 600 ~/.ssh/id_rsa*"
 
-# echo $(date) "- Configuring SSH ControlPath to use shorter path name"
-# sed -i -e "s/^# control_path = %(directory)s\/%%h-%%r/control_path = %(directory)s\/%%h-%%r/" /etc/ansible/ansible.cfg
+# echo $(date) "- Updating ansible.cfg to disable host_key_checking"
 sed -i -e "s/^#host_key_checking = False/host_key_checking = False/" /etc/ansible/ansible.cfg
-# sed -i -e "s/^#pty=False/pty=False/" /etc/ansible/ansible.cfg
-
-# Temporary workaround: https://access.redhat.com/solutions/3165971
-# mkdir -p /etc/origin/node/
-# touch /etc/origin/node/resolv.conf
-
-# Create playbook to update ansible.cfg file
-cat > updateansiblecfg.yaml <<EOF
-#!/usr/bin/ansible-playbook
-- hosts: localhost
-  gather_facts: no
-  tasks:
-  - lineinfile:
-      dest: /etc/ansible/ansible.cfg
-      regexp: '^library '
-      insertafter: '#library        = /usr/share/my_modules/'
-      line: 'library = /home/${SUDOUSER}/openshift-ansible/library/'
-EOF
-
-# Run Ansible Playbook to update ansible.cfg file
-# echo $(date) " - Updating ansible.cfg file"
-# ansible-playbook ./updateansiblecfg.yaml
 
 # Create Ansible Playbooks for Post Installation tasks
-# echo $(date) " - Create Ansible Playbooks for Post Installation tasks"
+echo $(date) " - Create Ansible Playbooks for Post Installation tasks"
 
 # Run on all masters - Create Inital OpenShift User on all Masters
 cat > /home/${SUDOUSER}/addocpuser.yml <<EOF
@@ -96,7 +73,7 @@ cat > /home/${SUDOUSER}/assignclusteradminrights.yml <<EOF
     description: "Make user cluster admin"
   tasks:
   - name: make OpenShift user cluster admin
-    shell: oadm policy add-cluster-role-to-user cluster-admin $SUDOUSER --config=/etc/origin/master/admin.kubeconfig
+    shell: oc adm policy add-cluster-role-to-user cluster-admin $SUDOUSER
 EOF
 
 # Run on MASTER-0 - configure registry to use Azure Storage
@@ -111,7 +88,7 @@ cat > /home/${SUDOUSER}/dockerregistry.yml <<EOF
     description: "Set registry to use Azure Storage"
   tasks:
   - name: Configure docker-registry to use Azure Storage
-    shell: oc env dc docker-registry -e REGISTRY_STORAGE=azure -e REGISTRY_STORAGE_AZURE_ACCOUNTNAME=$REGISTRYSA -e REGISTRY_STORAGE_AZURE_ACCOUNTKEY=$ACCOUNTKEY -e REGISTRY_STORAGE_AZURE_CONTAINER=registry
+    shell: oc set env dc docker-registry -e REGISTRY_STORAGE=azure -e REGISTRY_STORAGE_AZURE_ACCOUNTNAME=$REGISTRYSA -e REGISTRY_STORAGE_AZURE_ACCOUNTKEY=$ACCOUNTKEY -e REGISTRY_STORAGE_AZURE_CONTAINER=registry
 EOF
 
 # Run on MASTER-0 - configure Storage Class
@@ -422,8 +399,7 @@ cat > /home/${SUDOUSER}/deletestucknodes.yml <<EOF
 EOF
 
 # Create Ansible Hosts File
-# echo $(date) " - Create Ansible Hosts file"
-
+echo $(date) " - Create Ansible Hosts file"
 if [ $MASTERCOUNT -eq 1 ]
 then
 
@@ -558,11 +534,9 @@ fi
 # Initiating installation of OpenShift Container Platform using Ansible Playbook
 echo $(date) " - Installing OpenShift Container Platform via Ansible Playbook"
 runuser -l $SUDOUSER -c "git clone ${OANSIBLEURL} /home/$SUDOUSER/openshift-ansible && cd /home/$SUDOUSER/openshift-ansible && git checkout ${OANSIBLEBRANCH}"
-
-# Run Ansible playbooks
-# echo $(date) " - Running prerequisites.yml playbook"
+echo $(date) " - Running prerequisites.yml playbook"
 runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/prerequisites.yml"
-# echo $(date) " - Running deploy_cluster.yml playbook"
+echo $(date) " - Running deploy_cluster.yml playbook"
 runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/deploy_cluster.yml"
 
 # echo $(date) " - Modifying sudoers"
@@ -577,11 +551,6 @@ runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/deploy_clu
 
 # echo $(date) "- Re-enabling requiretty"
 # sed -i -e "s/# Defaults    requiretty/Defaults    requiretty/" /etc/sudoers
-
-##
-## TODO: Commented out some of the calls to ansible-playbook.
-##    need to determine if any of this is needed.
-##
 
 # Adding user to OpenShift authentication file
 echo $(date) "- Adding OpenShift user"
@@ -612,13 +581,13 @@ runuser -l $SUDOUSER -c "ansible-playbook ~/assignclusteradminrights.yml"
 
 # Delete postinstall files
 # echo $(date) "- Deleting post installation files"
-# rm /home/${SUDOUSER}/addocpuser.yml
-# rm /home/${SUDOUSER}/assignclusteradminrights.yml
-# rm /home/${SUDOUSER}/dockerregistry.yml
-# rm /home/${SUDOUSER}/vars.yml
-# rm /home/${SUDOUSER}/setup-azure-master.yml
-# rm /home/${SUDOUSER}/setup-azure-node-master.yml
-# rm /home/${SUDOUSER}/setup-azure-node.yml
-# rm /home/${SUDOUSER}/deletestucknodes.yml
+rm /home/${SUDOUSER}/addocpuser.yml
+rm /home/${SUDOUSER}/assignclusteradminrights.yml
+rm /home/${SUDOUSER}/dockerregistry.yml
+rm /home/${SUDOUSER}/vars.yml
+rm /home/${SUDOUSER}/setup-azure-master.yml
+rm /home/${SUDOUSER}/setup-azure-node-master.yml
+rm /home/${SUDOUSER}/setup-azure-node.yml
+rm /home/${SUDOUSER}/deletestucknodes.yml
 
 echo $(date) "- Script complete"
