@@ -23,15 +23,12 @@ fi
 
 # Install Docker 1.12.x
 echo $(date) " - Installing Docker 1.12.x"
-
 yum -y install docker
 sed -i -e "s#^OPTIONS='--selinux-enabled'#OPTIONS='--selinux-enabled --insecure-registry 172.30.0.0/16'#" /etc/sysconfig/docker
 
 # Create thin pool logical volume for Docker
 echo $(date) " - Creating thin pool logical volume for Docker and staring service"
-
 DOCKERVG=$( parted -m /dev/sda print all 2>/dev/null | grep unknown | grep /dev/sd | cut -d':' -f1 )
-
 echo "DEVS=${DOCKERVG}" >> /etc/sysconfig/docker-storage-setup
 echo "VG=docker-vg" >> /etc/sysconfig/docker-storage-setup
 docker-storage-setup
@@ -44,12 +41,10 @@ else
 fi
 
 # Enable and start Docker services
-
 systemctl enable docker
 systemctl start docker
 
 # Create Storage Class yml files on MASTER-0
-
 if hostname -f|grep -- "-0" >/dev/null
 then
 cat <<EOF > /home/${SUDOUSER}/scgeneric1.yml
