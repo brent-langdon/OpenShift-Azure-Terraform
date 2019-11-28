@@ -34,18 +34,18 @@ INFRALOOP=$((INFRACOUNT - 1))
 NODELOOP=$((NODECOUNT - 1))
 
 # Generate private keys for use by Ansible
-echo $(date) " - Generating Private keys for use by Ansible for OpenShift Installation"
-runuser -l $SUDOUSER -c "(echo \"$PRIVATEKEY\" | base64 -d) > ~/.ssh/id_rsa"
-runuser -l $SUDOUSER -c "chmod 600 ~/.ssh/id_rsa*"
+# echo $(date) " - Generating Private keys for use by Ansible for OpenShift Installation"
+# runuser -l $SUDOUSER -c "(echo \"$PRIVATEKEY\" | base64 -d) > ~/.ssh/id_rsa"
+# runuser -l $SUDOUSER -c "chmod 600 ~/.ssh/id_rsa*"
 
-echo $(date) "- Configuring SSH ControlPath to use shorter path name"
-sed -i -e "s/^# control_path = %(directory)s\/%%h-%%r/control_path = %(directory)s\/%%h-%%r/" /etc/ansible/ansible.cfg
-sed -i -e "s/^#host_key_checking = False/host_key_checking = False/" /etc/ansible/ansible.cfg
-sed -i -e "s/^#pty=False/pty=False/" /etc/ansible/ansible.cfg
+# echo $(date) "- Configuring SSH ControlPath to use shorter path name"
+# sed -i -e "s/^# control_path = %(directory)s\/%%h-%%r/control_path = %(directory)s\/%%h-%%r/" /etc/ansible/ansible.cfg
+# sed -i -e "s/^#host_key_checking = False/host_key_checking = False/" /etc/ansible/ansible.cfg
+# sed -i -e "s/^#pty=False/pty=False/" /etc/ansible/ansible.cfg
 
 # Temporary workaround: https://access.redhat.com/solutions/3165971
-mkdir -p /etc/origin/node/
-touch /etc/origin/node/resolv.conf
+# mkdir -p /etc/origin/node/
+# touch /etc/origin/node/resolv.conf
 
 # Create playbook to update ansible.cfg file
 cat > updateansiblecfg.yaml <<EOF
@@ -61,11 +61,11 @@ cat > updateansiblecfg.yaml <<EOF
 EOF
 
 # Run Ansible Playbook to update ansible.cfg file
-echo $(date) " - Updating ansible.cfg file"
-ansible-playbook ./updateansiblecfg.yaml
+# echo $(date) " - Updating ansible.cfg file"
+# ansible-playbook ./updateansiblecfg.yaml
 
 # Create Ansible Playbooks for Post Installation tasks
-echo $(date) " - Create Ansible Playbooks for Post Installation tasks"
+# echo $(date) " - Create Ansible Playbooks for Post Installation tasks"
 
 # Run on all masters - Create Inital OpenShift User on all Masters
 cat > /home/${SUDOUSER}/addocpuser.yml <<EOF
@@ -422,7 +422,7 @@ cat > /home/${SUDOUSER}/deletestucknodes.yml <<EOF
 EOF
 
 # Create Ansible Hosts File
-echo $(date) " - Create Ansible Hosts file"
+# echo $(date) " - Create Ansible Hosts file"
 
 if [ $MASTERCOUNT -eq 1 ]
 then
@@ -590,24 +590,23 @@ echo $(date) " - Installing OpenShift Container Platform via Ansible Playbook"
 runuser -l $SUDOUSER -c "git clone ${OANSIBLEURL} /home/$SUDOUSER/openshift-ansible && cd /home/$SUDOUSER/openshift-ansible && git checkout ${OANSIBLEBRANCH}"
 
 # Run Ansible playbooks
-echo $(date) " - Running prerequisites.yml playbook"
-runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/prerequisites.yml"
-echo $(date) " - Running deploy_cluster.yml playbook"
-runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/deploy_cluster.yml"
+# echo $(date) " - Running prerequisites.yml playbook"
+# runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/prerequisites.yml"
+# echo $(date) " - Running deploy_cluster.yml playbook"
+# runuser -l $SUDOUSER -c "ansible-playbook openshift-ansible/playbooks/deploy_cluster.yml"
 
-echo $(date) " - Modifying sudoers"
-sed -i -e "s/Defaults    requiretty/# Defaults    requiretty/" /etc/sudoers
-sed -i -e '/Defaults    env_keep += "LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY"/aDefaults    env_keep += "PATH"' /etc/sudoers
+# echo $(date) " - Modifying sudoers"
+# sed -i -e "s/Defaults    requiretty/# Defaults    requiretty/" /etc/sudoers
+# sed -i -e '/Defaults    env_keep += "LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY"/aDefaults    env_keep += "PATH"' /etc/sudoers
 
 # Deploying Registry
-echo $(date) "- Registry automatically deployed to infra nodes"
+# echo $(date) "- Registry automatically deployed to infra nodes"
 
 # Deploying Router
-echo $(date) "- Router automaticaly deployed to infra nodes"
+# echo $(date) "- Router automaticaly deployed to infra nodes"
 
-echo $(date) "- Re-enabling requiretty"
-
-sed -i -e "s/# Defaults    requiretty/Defaults    requiretty/" /etc/sudoers
+# echo $(date) "- Re-enabling requiretty"
+# sed -i -e "s/# Defaults    requiretty/Defaults    requiretty/" /etc/sudoers
 
 ##
 ## TODO: Commented out some of the calls to ansible-playbook.
@@ -615,26 +614,26 @@ sed -i -e "s/# Defaults    requiretty/Defaults    requiretty/" /etc/sudoers
 ##
 
 # Adding user to OpenShift authentication file
-echo $(date) "- Adding OpenShift user"
-runuser -l $SUDOUSER -c "ansible-playbook ~/addocpuser.yml"
+# echo $(date) "- Adding OpenShift user"
+# runuser -l $SUDOUSER -c "ansible-playbook ~/addocpuser.yml"
 
 # Assigning cluster admin rights to OpenShift user
-echo $(date) "- Assigning cluster admin rights to user"
-runuser -l $SUDOUSER -c "ansible-playbook ~/assignclusteradminrights.yml"
+# echo $(date) "- Assigning cluster admin rights to user"
+# runuser -l $SUDOUSER -c "ansible-playbook ~/assignclusteradminrights.yml"
 
 # Create Storage Class
-echo $(date) "- Creating Storage Class"
+# echo $(date) "- Creating Storage Class"
 #runuser -l $SUDOUSER -c "ansible-playbook ~/configurestorageclass.yml"
 
 # Configure Docker Registry to use Azure Storage Account
-echo $(date) "- Configuring Docker Registry to use Azure Storage Account"
+# echo $(date) "- Configuring Docker Registry to use Azure Storage Account"
 #runuser -l $SUDOUSER -c "ansible-playbook ~/dockerregistry.yml"
 
-echo $(date) "- Sleep for 120"
-sleep 120
+# echo $(date) "- Sleep for 120"
+# sleep 120
 
 # Execute setup-azure-master and setup-azure-node playbooks to configure Azure Cloud Provider
-echo $(date) "- Configuring OpenShift Cloud Provider to be Azure"
+# echo $(date) "- Configuring OpenShift Cloud Provider to be Azure"
 
 #runuser -l $SUDOUSER -c "ansible-playbook ~/setup-azure-master.yml"
 #runuser -l $SUDOUSER -c "ansible-playbook ~/setup-azure-node-master.yml"
@@ -642,15 +641,14 @@ echo $(date) "- Configuring OpenShift Cloud Provider to be Azure"
 #runuser -l $SUDOUSER -c "ansible-playbook ~/deletestucknodes.yml"
 
 # Delete postinstall files
-echo $(date) "- Deleting post installation files"
-
-rm /home/${SUDOUSER}/addocpuser.yml
-rm /home/${SUDOUSER}/assignclusteradminrights.yml
-rm /home/${SUDOUSER}/dockerregistry.yml
-rm /home/${SUDOUSER}/vars.yml
-rm /home/${SUDOUSER}/setup-azure-master.yml
-rm /home/${SUDOUSER}/setup-azure-node-master.yml
-rm /home/${SUDOUSER}/setup-azure-node.yml
-rm /home/${SUDOUSER}/deletestucknodes.yml
+# echo $(date) "- Deleting post installation files"
+# rm /home/${SUDOUSER}/addocpuser.yml
+# rm /home/${SUDOUSER}/assignclusteradminrights.yml
+# rm /home/${SUDOUSER}/dockerregistry.yml
+# rm /home/${SUDOUSER}/vars.yml
+# rm /home/${SUDOUSER}/setup-azure-master.yml
+# rm /home/${SUDOUSER}/setup-azure-node-master.yml
+# rm /home/${SUDOUSER}/setup-azure-node.yml
+# rm /home/${SUDOUSER}/deletestucknodes.yml
 
 echo $(date) "- Script complete"
