@@ -9,8 +9,8 @@ PASSWORD="$2"
 PRIVATEKEY=$3
 MASTER=$4
 MASTERPUBLICIPHOSTNAME=$5
-MASTERPUBLICIPADDRESS=$6
-INFRA=$7
+INFRA=$6
+INFRAPUBLICIPADDRESS=$7
 NODE=$8
 NODECOUNT=$9
 INFRACOUNT=${10}
@@ -428,8 +428,9 @@ openshift_cloudprovider_azure_resource_group=$RESOURCEGROUP
 openshift_cloudprovider_azure_location=$LOCATION
 
 openshift_master_cluster_hostname=$MASTERPUBLICIPHOSTNAME
-openshift_master_cluster_public_hostname=$MASTERPUBLICIPHOSTNAME
-openshift_console_hostname=console.$MASTERPUBLICIPHOSTNAME
+openshift_master_default_subdomain=$INFRAPUBLICIPADDRESS.nip.io
+#openshift_master_cluster_public_hostname=$MASTERPUBLICIPHOSTNAME
+#openshift_console_hostname=console.$MASTERPUBLICIPHOSTNAME
 
 # Enable HTPasswdPasswordIdentityProvider for username / password authentication for OpenShift Cluster
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
@@ -490,8 +491,9 @@ openshift_cloudprovider_azure_location=$LOCATION
 
 openshift_master_cluster_method=native
 openshift_master_cluster_hostname=$MASTERPUBLICIPHOSTNAME
-openshift_master_cluster_public_hostname=$MASTERPUBLICIPHOSTNAME
-openshift_console_hostname=console.$MASTERPUBLICIPHOSTNAME
+openshift_master_default_subdomain=$INFRAPUBLICIPADDRESS.nip.io
+#openshift_master_cluster_public_hostname=$MASTERPUBLICIPHOSTNAME
+#openshift_console_hostname=console.$MASTERPUBLICIPHOSTNAME
 
 # Enable HTPasswdPasswordIdentityProvider
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
