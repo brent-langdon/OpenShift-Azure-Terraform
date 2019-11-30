@@ -428,8 +428,8 @@ openshift_cloudprovider_azure_resource_group=$RESOURCEGROUP
 openshift_cloudprovider_azure_location=$LOCATION
 
 openshift_master_cluster_hostname=$MASTERPUBLICIPHOSTNAME
+openshift_master_cluster_public_hostname=$MASTERPUBLICIPHOSTNAME
 openshift_master_default_subdomain=$INFRAPUBLICIPADDRESS.nip.io
-#openshift_master_cluster_public_hostname=$MASTERPUBLICIPHOSTNAME
 #openshift_console_hostname=console.$MASTERPUBLICIPHOSTNAME
 
 # Enable HTPasswdPasswordIdentityProvider for username / password authentication for OpenShift Cluster
@@ -491,8 +491,8 @@ openshift_cloudprovider_azure_location=$LOCATION
 
 openshift_master_cluster_method=native
 openshift_master_cluster_hostname=$MASTERPUBLICIPHOSTNAME
+openshift_master_cluster_public_hostname=$MASTERPUBLICIPHOSTNAME
 openshift_master_default_subdomain=$INFRAPUBLICIPADDRESS.nip.io
-#openshift_master_cluster_public_hostname=$MASTERPUBLICIPHOSTNAME
 #openshift_console_hostname=console.$MASTERPUBLICIPHOSTNAME
 
 # Enable HTPasswdPasswordIdentityProvider
