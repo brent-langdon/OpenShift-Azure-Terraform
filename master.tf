@@ -125,28 +125,6 @@ resource "azurerm_virtual_machine" "osmastervm" {
   }
 }
 
-# resource "azurerm_virtual_machine_extension" "osmastervmextension" {
-#   name                 = "osmastervmextension"
-#   count                = var.openshift_azure_master_vm_count
-#   location             = azurerm_resource_group.osrg.location
-#   resource_group_name  = azurerm_resource_group.osrg.name
-#   depends_on           = [azurerm_virtual_machine.osmastervm]
-#   virtual_machine_name = element(azurerm_virtual_machine.osmastervm.*.name, count.index)
-#   publisher            = "Microsoft.Azure.Extensions"
-#   type                 = "CustomScript"
-#   type_handler_version = "2.0"
-
-#   settings = <<SETTINGS
-#     {
-#         "fileUris": [
-#             "${var.openshift_azure_master_prep_script}", "${var.openshift_azure_deploy_openshift_script}"
-#         ],
-#         "commandToExecute": "bash masterPrep.sh ${azurerm_storage_account.osstoragepv.name} ${var.openshift_azure_vm_username}"
-#     }
-# SETTINGS
-# }
-
-
 resource "azurerm_virtual_machine_extension" "osmastervmextension" {
   name                 = "osmastervmextension"
   count                = var.openshift_azure_master_vm_count
