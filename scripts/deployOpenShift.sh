@@ -1,6 +1,13 @@
 #!/bin/bash
 
-echo $(date) " - Starting Script"
+# Only needs to run on Master 0
+if hostname -f|grep -- "-0" >/dev/null
+then
+  echo $(date) " - Installing OpenShift on Master"
+else
+  echo $(date) " - Skipping OpenShift Install - Not Master 0"
+  exit 0
+fi
 
 set -e
 
