@@ -76,19 +76,19 @@ variable "openshift_azure_node_vm_count" {
 variable "openshift_azure_master_vm_size" {
   type        = string
   description = "Master VM size"
-  default     = "Standard_DS2_v2"
+  default     = "Standard_D4s_v3"
 }
 
 variable "openshift_azure_infra_vm_size" {
   type        = string
   description = "Infra VM size"
-  default     = "Standard_DS2_v2"
+  default     = "Standard_D4s_v3"
 }
 
 variable "openshift_azure_node_vm_size" {
   type        = string
   description = "Node VM size"
-  default     = "Standard_DS2_v2"
+  default     = "Standard_D4s_v3"
 }
 
 variable "openshift_azure_infra_vm_address_space" {
@@ -120,7 +120,7 @@ variable "openshift_azure_vm_os" {
   default = {
     publisher = "OpenLogic"
     offer     = "CentOS"
-    sku       = "7.3"
+    sku       = "7.7"
     version   = "latest"
   }
 }
