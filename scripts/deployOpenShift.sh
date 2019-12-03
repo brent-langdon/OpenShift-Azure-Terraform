@@ -464,7 +464,7 @@ do
   echo "$INFRA-$c openshift_node_group_name='node-config-infra'" >> /etc/ansible/hosts
 done
 
-# Loop to add Nodes
+# Loop to add Compute Nodes
 for (( c=0; c<$NODECOUNT; c++ ))
 do
   echo "$NODE-$c openshift_node_group_name='node-config-compute'" >> /etc/ansible/hosts
@@ -532,10 +532,10 @@ do
   echo "$INFRA-$c openshift_node_group_name='node-config-infra'" >> /etc/ansible/hosts
 done
 
-# Loop to add Nodes
+# Loop to add Compute Nodes
 for (( c=0; c<$NODECOUNT; c++ ))
 do
-  echo "$NODE-$c openshift_node_group_name='node-config-infra'" >> /etc/ansible/hosts
+  echo "$NODE-$c openshift_node_group_name='node-config-compute'" >> /etc/ansible/hosts
 done
 
 fi
